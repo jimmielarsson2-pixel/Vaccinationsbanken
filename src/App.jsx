@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+ import React, { useState } from "react";
 import {
   ShieldCheck,
   Syringe,
@@ -7,6 +7,11 @@ import {
   Plus,
   FileDown,
   LogOut,
+  MapPin,
+  Star,
+  Calendar,
+  Globe2,
+  ArrowRight,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card.jsx";
 import { Button } from "./components/ui/button.jsx";
@@ -61,6 +66,52 @@ const mockReminders = [
     text: "Säsongens influensavaccin finns tillgängligt. Boka tid om du tillhör riskgrupp.",
   },
 ];
+
+// ---- NY DATA FÖR BOKNING ----
+
+const vaccineOptions = [
+  { id: "tbe", label: "TBE" },
+  { id: "covid", label: "Covid-19" },
+  { id: "flu", label: "Influensa (säsong)" },
+  { id: "hep_a", label: "Hepatit A" },
+  { id: "hep_b", label: "Hepatit B" },
+  { id: "tet", label: "Stelkramp / difteri" },
+];
+
+const providerOptions = [
+  {
+    id: 1,
+    name: "Svea Vaccin – Stockholm City",
+    city: "Stockholm",
+    address: "Drottninggatan 59",
+    rating: 4.7,
+    priceFrom: 395,
+    hasTimesToday: true,
+    vaccines: ["tbe", "covid", "flu", "hep_a", "hep_b", "tet"],
+  },
+  {
+    id: 2,
+    name: "Vaccinova – Malmö Emporia",
+    city: "Malmö",
+    address: "Emporia, plan 1",
+    rating: 4.5,
+    priceFrom: 365,
+    hasTimesToday: false,
+    vaccines: ["tbe", "flu", "hep_a", "tet"],
+  },
+  {
+    id: 3,
+    name: "Min Doktor – Göteborg Nordstan",
+    city: "Göteborg",
+    address: "Nordstan, Apoteket",
+    rating: 4.3,
+    priceFrom: 399,
+    hasTimesToday: true,
+    vaccines: ["covid", "flu", "tet"],
+  },
+];
+
+// ------- BEFINTLIGA KOMPONENTER -------
 
 function StatusBadge({ status }) {
   const map = {
@@ -269,6 +320,173 @@ function Header({ onLogout }) {
   );
 }
 
+// ----- NYA KOMPONENTER FÖR BOKNING -----
+
+function VaccineSelect({ selectedId, onChange }) {
+  return (
+    <div className="space-y-1">
+      <label className="text-xs text-slate-600 flex items-center gap-1">
+        <Syringe className="w-3 h-3 text-sky-500" />
+        Vilket vaccin vill du boka?
+      </label>
+      <select
+        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 shadow-sm outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+        value={selectedId}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">Välj vaccin...</option>
+        {vaccineOptions.map((v) => (
+          <option key={v.id} value={v.id}>
+            {v.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+function ClinicCard({ clinic, selectedVaccine }) {
+  const vaccineLabel =
+    vaccineOptions.find((v) => v.id === selectedVaccine)?.label || "Vaccin";
+
+  return (
+    <Card className="border-slate-100 hover:shadow-md transition-shadow">
+      <CardContent className="py-3 px-3 space-y-2 text-xs">
+        <div className="flex justify-between gap-2">
+          <div>
+            <p className="font-semibold text-slate-900 text-sm">
+              {clinic.name}
+            </p>
+            <div className="flex items-center gap-2 text-slate-500 mt-0.5">
+              <span className="inline-flex items-center gap-1">
+                <MapPin className="w-3 h-3" />
+                {clinic.city}
+              </span>
+              <span className="hidden sm:inline text-[11px]">
+                {clinic.address}
+              </span>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="inline-flex items-center gap-1">
+              <Star className="w-3 h-3 text-amber-500" />
+              <span className="text-[11px] text-slate-700">
+                {clinic.rating.toFixed(1)}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500">
+              från {clinic.priceFrom} kr
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex items-center gap-1 text-[11px]">
+            <Calendar className="w-3 h-3 text-emerald-600" />
+            {clinic.hasTimesToday ? (
+              <span className="text-emerald-700">
+                Lediga tider idag för {vaccineLabel}
+              </span>
+            ) : (
+              <span className="text-slate-500">
+                Nästa lediga tider inom 7 dagar
+              </span>
+            )}
+          </div>
+          <Button
+            size="sm"
+            className="h-8 px-3 text-[11px] flex items-center gap-1"
+          >
+            Boka tid
+            <ArrowRight className="w-3 h-3" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BookingPanel() {
+  const [selectedVaccine, setSelectedVaccine] = useState("");
+  const [cityFilter, setCityFilter] = useState("");
+
+  const filteredProviders = providerOptions.filter((p) => {
+    const matchVaccine =
+      !selectedVaccine || p.vaccines.includes(selectedVaccine);
+    const matchCity =
+      !cityFilter ||
+      p.city.toLowerCase().includes(cityFilter.trim().toLowerCase());
+    return matchVaccine && matchCity;
+  });
+
+  return (
+    <div className="space-y-3 mt-2">
+      <Card className="border-slate-100">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Globe2 className="w-4 h-4 text-sky-500" />
+            Boka vaccination
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-xs">
+          <p className="text-slate-600">
+            Välj vaccin och stad så visar vi kliniker som har tider. I denna
+            demo används exempeldata – i skarp version hämtas tider i realtid
+            från respektive vaccinatör.
+          </p>
+          <VaccineSelect
+            selectedId={selectedVaccine}
+            onChange={setSelectedVaccine}
+          />
+          <div className="space-y-1">
+            <label className="text-xs text-slate-600 flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-sky-500" />
+              Var vill du vaccinera dig?
+            </label>
+            <Input
+              className="h-9 text-xs"
+              placeholder="t.ex. Stockholm, Göteborg, Malmö..."
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {selectedVaccine && (
+        <p className="text-[11px] text-slate-500 px-1">
+          Visar kliniker för{" "}
+          <span className="font-semibold">
+            {
+              vaccineOptions.find((v) => v.id === selectedVaccine)?.label ??
+              "valt vaccin"
+            }
+          </span>
+          . I framtiden kan du här även se reserekommendationer per land.
+        </p>
+      )}
+
+      <div className="space-y-2">
+        {filteredProviders.length === 0 ? (
+          <p className="text-xs text-slate-500 px-1">
+            Inga kliniker matchar din filtrering just nu. Prova att ändra stad
+            eller vaccin.
+          </p>
+        ) : (
+          filteredProviders.map((clinic) => (
+            <ClinicCard
+              key={clinic.id}
+              clinic={clinic}
+              selectedVaccine={selectedVaccine}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ----- LOGIN-SKÄRM & ROOT-KOMPONENT -----
+
 function LoginScreen({ onLogin }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950">
@@ -291,8 +509,8 @@ function LoginScreen({ onLogin }) {
               </div>
             </div>
             <p className="text-xs text-slate-300 mt-1">
-              Logga in säkert med BankID och få en överblick över alla dina
-              tidigare och kommande vaccinationer.
+              Logga in säkert med BankID och få en överblick över alla tidigare,
+              kommande och bokade vaccinationer.
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pt-1 pb-5">
@@ -320,9 +538,8 @@ function LoginScreen({ onLogin }) {
               Logga in med BankID
             </Button>
             <p className="text-[10px] text-slate-400 leading-relaxed">
-              Genom att logga in godkänner du att dina vaccinationsuppgifter
-              lagras krypterat enligt GDPR. Du kan när som helst ta bort ditt
-              konto och all data.
+              Demo-version: ingen riktig BankID-koppling och data sparas inte
+              permanent. I skarp version lagras allt krypterat enligt GDPR.
             </p>
           </CardContent>
         </Card>
@@ -391,12 +608,15 @@ export default function VaccinationsbankenApp() {
 
           <section className="mb-3">
             <Tabs defaultValue="lista">
-              <TabsList className="grid grid-cols-2 bg-slate-100 rounded-xl px-1 py-1 h-9">
+              <TabsList className="grid grid-cols-3 bg-slate-100 rounded-xl px-1 py-1 h-9">
                 <TabsTrigger value="lista" className="text-xs">
                   Mina vaccinationer
                 </TabsTrigger>
                 <TabsTrigger value="paaminnelser" className="text-xs">
                   Påminnelser
+                </TabsTrigger>
+                <TabsTrigger value="boka" className="text-xs">
+                  Boka
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="lista" className="mt-2">
@@ -406,6 +626,9 @@ export default function VaccinationsbankenApp() {
               </TabsContent>
               <TabsContent value="paaminnelser" className="mt-2">
                 <RemindersPanel />
+              </TabsContent>
+              <TabsContent value="boka" className="mt-2">
+                <BookingPanel />
               </TabsContent>
             </Tabs>
           </section>
