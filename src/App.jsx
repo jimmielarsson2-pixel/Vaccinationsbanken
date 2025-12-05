@@ -30,7 +30,7 @@ import {
   TabsContent,
 } from "./components/ui/tabs.jsx";
 
-// --------- MOCKDATA ---------
+/* ------------ MOCKDATA ----------------- */
 
 const profiles = [
   { id: "jimmie", name: "Jimmie", relation: "Du", age: 34 },
@@ -153,20 +153,22 @@ const mockShareLog = [
   },
 ];
 
-// ---------- HJÄLPKOMPONENTER ----------
+/* ------------ HJÄLPKOMPONENTER ----------------- */
 
 function StatusBadge({ status }) {
   const map = {
-    Aktiv: "bg-emerald-100 text-emerald-800",
-    "Behöver påfyllnad": "bg-amber-100 text-amber-800",
-    "Närmar sig utgång": "bg-orange-100 text-orange-800",
-    Utgången: "bg-red-100 text-red-800",
+    Aktiv: "bg-emerald-50 text-emerald-800 border-emerald-100",
+    "Behöver påfyllnad": "bg-amber-50 text-amber-800 border-amber-100",
+    "Närmar sig utgång": "bg-orange-50 text-orange-800 border-orange-100",
+    Utgången: "bg-red-50 text-red-800 border-red-100",
   };
-  const cls = map[status] ?? "bg-slate-100 text-slate-800";
+  const cls = map[status] ?? "bg-slate-50 text-slate-800 border-slate-100";
   return (
-    <Badge className={`${cls} border-0 rounded-full px-3 py-1 text-[11px]`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] border ${cls}`}
+    >
       {status}
-    </Badge>
+    </span>
   );
 }
 
@@ -188,10 +190,10 @@ function ProfileChip({ profile, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-full border text-xs flex items-center gap-1 transition ${
+      className={`px-3 py-1.5 rounded-full text-xs flex items-center gap-1 transition ${
         active
-          ? "bg-emerald-700 text-emerald-50 border-emerald-700 shadow-sm"
-          : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          ? "bg-white text-emerald-900 shadow-sm border border-emerald-200"
+          : "bg-emerald-50 text-emerald-800 border border-emerald-50 hover:bg-white hover:border-emerald-200"
       }`}
     >
       <Users className="w-3 h-3" />
@@ -201,7 +203,7 @@ function ProfileChip({ profile, active, onClick }) {
   );
 }
 
-// ---------- LISTOR / DETALJER ----------
+/* ------------ LISTA / DETALJ ----------------- */
 
 function VaccinationList({ onSelect, vaccines }) {
   if (!vaccines.length) {
@@ -213,18 +215,18 @@ function VaccinationList({ onSelect, vaccines }) {
   }
 
   return (
-    <div className="space-y-3 mt-3">
+    <div className="space-y-2 mt-3">
       {vaccines.map((v) => (
         <button
           key={v.id}
           onClick={() => onSelect(v.id)}
           className="w-full text-left"
         >
-          <Card className="hover:shadow-md transition-shadow border-slate-100 bg-white/90">
-            <CardContent className="py-3 flex items-center justify-between gap-3">
+          <Card className="border-slate-100 bg-white hover:bg-emerald-50/40 transition-colors">
+            <CardContent className="py-2.5 flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <Syringe className="w-4 h-4 text-teal-700" />
+                  <Syringe className="w-4 h-4 text-emerald-700" />
                   <p className="font-medium text-sm text-slate-900">
                     {v.name}
                   </p>
@@ -251,20 +253,22 @@ function VaccinationDetail({ id, vaccines }) {
     <Card className="mt-3 border-slate-100 bg-white">
       <CardHeader className="pb-2 flex flex-row items-center justify-between">
         <div>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Syringe className="w-4 h-4 text-teal-700" />
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Syringe className="w-4 h-4 text-emerald-700" />
             {v.name}
           </CardTitle>
-          <p className="text-xs text-slate-500 mt-1">Kategori: {v.category}</p>
+          <p className="text-[11px] text-slate-500 mt-1">
+            Kategori: {v.category}
+          </p>
         </div>
         <StatusBadge status={v.status} />
       </CardHeader>
       <CardContent className="space-y-3 text-sm">
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-slate-600 text-xs">
           <span>Vaccinationsdatum</span>
           <span className="font-medium text-slate-900">{v.date}</span>
         </div>
-        <div className="flex justify-between text-slate-600">
+        <div className="flex justify-between text-slate-600 text-xs">
           <span>Klinik</span>
           <span className="text-right font-medium text-slate-900 max-w-[60%]">
             {v.clinic}
@@ -277,7 +281,7 @@ function VaccinationDetail({ id, vaccines }) {
           <Button
             variant="outline"
             size="sm"
-            className="text-xs flex items-center gap-1 border-emerald-700 text-emerald-800 hover:bg-emerald-50"
+            className="text-xs flex items-center gap-1 border-emerald-600 text-emerald-800 hover:bg-emerald-50"
           >
             <FileDown className="w-3 h-3" />
             Ladda ner intyg (PDF)
@@ -298,10 +302,10 @@ function VaccinationDetail({ id, vaccines }) {
 
 function AddVaccinationForm() {
   return (
-    <Card className="mt-3 border-dashed border-slate-200 bg-emerald-50/40">
+    <Card className="mt-3 border-dashed border-slate-200 bg-slate-50">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm flex items-center gap-2 text-emerald-900">
-          <Plus className="w-4 h-4" />
+        <CardTitle className="text-sm flex items-center gap-2 text-slate-900">
+          <Plus className="w-4 h-4 text-emerald-700" />
           Lägg till vaccination
         </CardTitle>
       </CardHeader>
@@ -329,8 +333,8 @@ function AddVaccinationForm() {
           />
         </div>
         <div className="space-y-2 pt-1">
-          <Button className="w-full mt-1 h-9 text-xs flex items-center gap-1 bg-emerald-700 hover:bg-emerald-600">
-            Spara manuellt
+          <Button className="w-full mt-1 h-9 text-xs flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500">
+            Spara manuellt (demo)
           </Button>
           <Button
             variant="outline"
@@ -341,9 +345,8 @@ function AddVaccinationForm() {
           </Button>
         </div>
         <p className="text-[11px] text-slate-500">
-          För verifierad vaccination kan vårdgivare logga in i sin portal och
-          signera dosen digitalt. Foto-uppladdning används som stöd – du
-          godkänner alltid innan något sparas.
+          I skarp version kan vårdgivare verifiera vaccinet digitalt. Foto används som
+          stöd och du godkänner alltid innan något sparas.
         </p>
       </CardContent>
     </Card>
@@ -366,7 +369,7 @@ function RemindersPanel({ reminders }) {
           <Bell className="w-4 h-4 text-amber-600" />
           <CardTitle className="text-sm">Kommande påminnelser</CardTitle>
         </div>
-        <Badge className="bg-amber-50 text-amber-700 border-0 rounded-full px-2 py-0 text-[10px]">
+        <Badge className="bg-amber-50 text-amber-700 border-amber-100 rounded-full px-2 py-0 text-[10px]">
           {reminders.length} aktiva
         </Badge>
       </CardHeader>
@@ -374,7 +377,7 @@ function RemindersPanel({ reminders }) {
         {reminders.map((r) => (
           <div
             key={r.id}
-            className="p-2 rounded-xl bg-amber-50/70 border border-amber-100"
+            className="p-2 rounded-xl bg-amber-50/80 border border-amber-100"
           >
             <p className="font-medium text-amber-900 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
@@ -388,17 +391,17 @@ function RemindersPanel({ reminders }) {
   );
 }
 
-// -------- BOKNING --------
+/* ------------ BOKNING ----------------- */
 
 function VaccineSelect({ selectedId, onChange }) {
   return (
     <div className="space-y-1">
       <label className="text-xs text-slate-600 flex items-center gap-1">
-        <Syringe className="w-3 h-3 text-teal-700" />
+        <Syringe className="w-3 h-3 text-emerald-700" />
         Vilket vaccin vill du boka?
       </label>
       <select
-        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 shadow-sm outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
         value={selectedId}
         onChange={(e) => onChange(e.target.value)}
       >
@@ -418,7 +421,7 @@ function ClinicCard({ clinic, selectedVaccine }) {
     vaccineOptions.find((v) => v.id === selectedVaccine)?.label || "Vaccin";
 
   return (
-    <Card className="border-slate-100 hover:shadow-md transition-shadow bg-white/95">
+    <Card className="border-slate-100 bg-white hover:bg-emerald-50/40 transition-colors">
       <CardContent className="py-3 px-3 space-y-2 text-xs">
         <div className="flex justify-between gap-2">
           <div>
@@ -462,7 +465,7 @@ function ClinicCard({ clinic, selectedVaccine }) {
           </div>
           <Button
             size="sm"
-            className="h-8 px-3 text-[11px] flex items-center gap-1 bg-teal-700 hover:bg-teal-600"
+            className="h-8 px-3 text-[11px] flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500"
           >
             Boka tid
             <ArrowRight className="w-3 h-3" />
@@ -491,15 +494,15 @@ function BookingPanel() {
       <Card className="border-slate-100 bg-white">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2 text-slate-900">
-            <Globe2 className="w-4 h-4 text-teal-700" />
+            <Globe2 className="w-4 h-4 text-emerald-700" />
             Boka vaccination
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-xs">
           <p className="text-slate-600">
             Välj vaccin och stad så visar vi kliniker som har tider. I denna
-            demo används exempeldata – i skarp version hämtas tider i realtid
-            från respektive vaccinatör.
+            prototyp används exempeldata – i skarp version hämtas tider i
+            realtid från vaccinatörerna.
           </p>
           <VaccineSelect
             selectedId={selectedVaccine}
@@ -507,7 +510,7 @@ function BookingPanel() {
           />
           <div className="space-y-1">
             <label className="text-xs text-slate-600 flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-teal-700" />
+              <MapPin className="w-3 h-3 text-emerald-700" />
               Var vill du vaccinera dig?
             </label>
             <Input
@@ -553,7 +556,7 @@ function BookingPanel() {
   );
 }
 
-// ------ DELA, ICE, KONTO & INTEGRITET ------
+/* -------- DELA, ICE, KONTO & EXPORT -------- */
 
 function ShareAndICEPanel({ activeProfile }) {
   return (
@@ -562,15 +565,14 @@ function ShareAndICEPanel({ activeProfile }) {
       <Card className="border-slate-100 bg-white">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
-            <QrCode className="w-4 h-4 text-teal-700" />
+            <QrCode className="w-4 h-4 text-emerald-700" />
             Dela dina vaccinationer
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 text-xs">
           <p className="text-slate-600">
             Visa en QR-kod som t.ex. företagshälsa, BVC eller vårdpersonal kan
-            skanna. Du godkänner alltid delningen i appen innan de får se
-            något.
+            skanna. Du godkänner alltid delningen i appen innan de får se något.
           </p>
           <div className="flex items-center justify-between gap-2">
             <div className="flex flex-col">
@@ -584,7 +586,7 @@ function ShareAndICEPanel({ activeProfile }) {
             <Button
               variant="outline"
               size="sm"
-              className="h-9 px-3 text-xs flex items-center gap-1 border-teal-700 text-teal-800 hover:bg-teal-50"
+              className="h-9 px-3 text-xs flex items-center gap-1 border-emerald-600 text-emerald-800 hover:bg-emerald-50"
             >
               <QrCode className="w-3 h-3" />
               Visa QR-kod (demo)
@@ -611,7 +613,7 @@ function ShareAndICEPanel({ activeProfile }) {
       </Card>
 
       {/* ICE / Nödlägeskort */}
-      <Card className="border-slate-100 bg-emerald-50/70">
+      <Card className="border-slate-100 bg-emerald-50">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2 text-emerald-900">
             <AlertTriangle className="w-4 h-4 text-emerald-800" />
@@ -624,17 +626,17 @@ function ShareAndICEPanel({ activeProfile }) {
             framtiden kan detta sparas som PDF eller i Apple Wallet / Google
             Wallet.
           </p>
-          <div className="rounded-xl border border-emerald-200 bg-white/80 px-3 py-2 space-y-1">
+          <div className="rounded-xl border border-emerald-200 bg-white px-3 py-2 space-y-1">
             <p className="text-[11px] text-slate-500">Profil</p>
             <p className="text-sm font-semibold text-slate-900">
               {activeProfile.name} ({activeProfile.age} år)
             </p>
             <p className="text-[11px] text-slate-600">
-              Detta är en demo – i skarp version kan du lägga till
+              Detta är en prototyp – i skarp version kan du lägga till
               allergier, mediciner och ICE-kontakter.
             </p>
           </div>
-          <Button className="w-full h-9 text-xs bg-emerald-700 hover:bg-emerald-600 flex items-center gap-1">
+          <Button className="w-full h-9 text-xs bg-emerald-600 hover:bg-emerald-500 flex items-center gap-1">
             <FileDown className="w-3 h-3" />
             Skapa ICE-kort (demo)
           </Button>
@@ -663,7 +665,7 @@ function ShareAndICEPanel({ activeProfile }) {
         </CardContent>
       </Card>
 
-      {/* Konto & export – den modell vi pratade om */}
+      {/* Konto & export – modell för avslut */}
       <Card className="border-slate-100 bg-slate-50">
         <CardHeader className="pb-2 flex flex-row items-center gap-2">
           <Trash2 className="w-4 h-4 text-slate-700" />
@@ -671,25 +673,24 @@ function ShareAndICEPanel({ activeProfile }) {
         </CardHeader>
         <CardContent className="space-y-3 text-[11px] text-slate-700">
           <p>
-            Här är en modell för hur avslut av konto och export kan fungera i
-            skarp version. Tanken är att användaren alltid först får med sig
-            all data på ett enkelt sätt, innan kontot tas bort:
+            Så här kan flödet se ut när en användare vill avsluta sitt konto
+            men ändå få med sig alla vaccinationer:
           </p>
           <ol className="list-decimal list-inside space-y-1">
-            <li>Skapa export (ZIP med JSON/CSV + PDF per profil).</li>
+            <li>Först skapa en full export (ZIP + PDF per profil).</li>
             <li>Visa nedladdningslänk direkt i appen.</li>
             <li>Skicka exporten via e-post som backup.</li>
-            <li>Låta användaren välja: pausa/arkivera eller radera kontot.</li>
+            <li>Låt användaren välja: pausa/arkivera eller radera kontot.</li>
           </ol>
 
           <div className="mt-2 space-y-2">
-            <Button className="w-full h-9 text-xs bg-teal-700 hover:bg-teal-600 flex items-center gap-1">
+            <Button className="w-full h-9 text-xs bg-emerald-600 hover:bg-emerald-500 flex items-center gap-1">
               <FileDown className="w-3 h-3" />
               1. Exportera alla vaccinationer (demo)
             </Button>
             <p className="text-[11px] text-slate-600">
               Skapar en samlad export med ZIP + PDF. I skarp version kan detta
-              också inkludera Wallet-kort och skickas via e-post.
+              även innehålla Wallet-kort och skickas via e-post.
             </p>
 
             <Button
@@ -718,8 +719,8 @@ function ShareAndICEPanel({ activeProfile }) {
           </div>
 
           <p className="text-[10px] text-slate-500 mt-1">
-            Denna sektion är en prototyp för att visa flödet. Tekniken bakom
-            (GDPR-export, radering, loggning) implementeras i backend.
+            Denna sektion är en prototyp för att visa flödet. Själva
+            exporten/raderingen implementeras senare i backend.
           </p>
         </CardContent>
       </Card>
@@ -727,20 +728,20 @@ function ShareAndICEPanel({ activeProfile }) {
   );
 }
 
-// ---------- HEADER & LOGIN ----------
+/* ------------ HEADER & LOGIN ----------------- */
 
 function Header({ onLogout, activeProfile }) {
   return (
-    <header className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-slate-100 bg-gradient-to-r from-[#F7F3EE] via-[#F9F6F0] to-[#F4F8F7]">
+    <header className="flex items-center justify-between px-4 py-3 bg-[#0EA05D] text-white">
       <div className="flex items-center gap-2">
-        <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-teal-700 to-emerald-600 flex items-center justify-center text-white shadow-md">
+        <div className="w-9 h-9 rounded-2xl bg-white/10 flex items-center justify-center">
           <Syringe className="w-4 h-4" />
         </div>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.12em] text-teal-800 font-semibold">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-white/80 font-semibold">
             Vaccinationsbanken
           </p>
-          <p className="text-[11px] text-slate-500 flex items-center gap-1">
+          <p className="text-[11px] text-white/90 flex items-center gap-1">
             <User className="w-3 h-3" />
             Inloggad med BankID • {activeProfile.name}
           </p>
@@ -749,10 +750,10 @@ function Header({ onLogout, activeProfile }) {
       <Button
         variant="ghost"
         size="icon"
-        className="w-8 h-8 hover:bg-slate-100"
+        className="w-8 h-8 hover:bg-white/10 text-white"
         onClick={onLogout}
       >
-        <LogOut className="w-4 h-4 text-slate-400" />
+        <LogOut className="w-4 h-4" />
       </Button>
     </header>
   );
@@ -760,53 +761,37 @@ function Header({ onLogout, activeProfile }) {
 
 function LoginScreen({ onLogin }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#1F2A33] via-[#24333F] to-[#1F2A33]">
-      <div className="relative w-full max-w-sm mx-auto">
-        <div className="absolute -top-16 -right-10 w-40 h-40 bg-emerald-500/25 blur-3xl rounded-full" />
-        <div className="absolute -bottom-20 -left-16 w-48 h-48 bg-teal-500/20 blur-3xl rounded-full" />
-        <Card className="relative border-slate-800 bg-[#1E252C]/90 backdrop-blur-xl text-slate-50 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F6F8]">
+      <div className="w-full max-w-sm mx-auto">
+        <Card className="border-slate-200 bg-white shadow-md">
           <CardHeader className="space-y-2 pb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 rounded-2xl bg-[#0EA05D] flex items-center justify-center text-white">
                 <Syringe className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-emerald-300 font-semibold">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-semibold">
                   Vaccinationsbanken
                 </p>
                 <CardTitle className="text-lg mt-1">
-                  Modern vaccinationsöversikt för hela familjen.
+                  Samla och ha koll på alla dina vaccinationer.
                 </CardTitle>
               </div>
             </div>
-            <p className="text-xs text-slate-300 mt-1">
-              Samla alla vaccinationer, få påminnelser, boka nya tider och dela
-              säkert med vården – från en enda app.
+            <p className="text-xs text-slate-500 mt-1">
+              Logga in med BankID i skarp version. Här är det en demoinloggning
+              så att du kan testa flödet.
             </p>
           </CardHeader>
           <CardContent className="space-y-4 pt-1 pb-5">
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-slate-300">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                BankID-säker inloggning
-              </div>
-              <div className="flex items-center gap-2 text-slate-300">
-                <Bell className="w-3 h-3 text-amber-400" />
-                Smarta påminnelser för hela familjen
-              </div>
-              <div className="flex items-center gap-2 text-slate-300">
-                <FileDown className="w-3 h-3 text-sky-300" />
-                Intyg som PDF eller QR-kod
-              </div>
-            </div>
             <Button
-              className="w-full h-11 mt-1 bg-emerald-600 hover:bg-emerald-500 text-sm font-medium flex items-center justify-center gap-2 rounded-xl"
+              className="w-full h-11 bg-[#0EA05D] hover:bg-[#0A8A4E] text-sm font-medium flex items-center justify-center gap-2 rounded-xl"
               onClick={onLogin}
             >
-              <span className="w-5 h-5 bg-white rounded-md flex items-center justify-center text-[10px] font-bold text-emerald-700">
+              <span className="w-5 h-5 bg-white rounded-md flex items-center justify-center text-[10px] font-bold text-[#0EA05D]">
                 ID
               </span>
-              Logga in med BankID (demo)
+              Logga in (demo)
             </Button>
             <p className="text-[10px] text-slate-400 leading-relaxed">
               Detta är en prototyp. Ingen riktig BankID-koppling och ingen data
@@ -820,7 +805,7 @@ function LoginScreen({ onLogin }) {
   );
 }
 
-// ---------- ROOT-KOMPONENT ----------
+/* ------------ ROOT ----------------- */
 
 export default function VaccinationsbankenApp() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -844,17 +829,17 @@ export default function VaccinationsbankenApp() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F3F1EC] py-6">
-      <div className="w-full max-w-md rounded-3xl border border-slate-200 shadow-xl bg-white overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#F5F6F8] py-6">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 shadow-[0_14px_40px_rgba(15,23,42,0.12)] bg-white overflow-hidden">
         <Header
           onLogout={() => setLoggedIn(false)}
           activeProfile={activeProfile}
         />
-        <main className="px-4 pb-4 pt-2 bg-gradient-to-b from-[#F9F6F0] to-[#F4F7F5]">
+        <main className="px-4 pb-4 pt-3 bg-[#F9FAFB]">
           {/* Profilväxlare */}
-          <section className="mt-2 mb-3">
+          <section className="mb-3">
             <p className="text-[11px] text-slate-500 mb-1 flex items-center gap-1">
-              <Users className="w-3 h-3 text-teal-700" />
+              <Users className="w-3 h-3 text-emerald-700" />
               Välj profil
             </p>
             <div className="flex gap-1.5 overflow-x-auto pb-1">
@@ -879,15 +864,17 @@ export default function VaccinationsbankenApp() {
           <section className="mb-3">
             <p className="text-[11px] text-slate-500 mb-1">Översikt</p>
             <div className="grid grid-cols-3 gap-2">
-              <Card className="border-0 bg-teal-700 text-teal-50 shadow-sm">
+              <Card className="border-0 bg-[#0EA05D] text-white">
                 <CardContent className="py-2 px-3 flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.14em] opacity-80">
+                  <span className="text-[10px] uppercase tracking-[0.14em] text-white/80">
                     Totalt
                   </span>
                   <span className="text-xl font-semibold leading-none">
                     {vaccinesForProfile.length}
                   </span>
-                  <span className="text-[11px] opacity-80">vaccinationer</span>
+                  <span className="text-[11px] text-white/80">
+                    vaccinationer
+                  </span>
                 </CardContent>
               </Card>
               <Card className="border-0 bg-emerald-50">
@@ -922,17 +909,26 @@ export default function VaccinationsbankenApp() {
           {/* Huvudflikar */}
           <section className="mb-3">
             <Tabs defaultValue="lista">
-              <TabsList className="grid grid-cols-4 bg-slate-100 rounded-xl px-1 py-1 h-9">
-                <TabsTrigger value="lista" className="text-[11px]">
+              <TabsList className="grid grid-cols-4 bg-white border border-slate-200 rounded-2xl px-1 py-1 h-9">
+                <TabsTrigger value="lista" className="text-[11px] data-[state=active]:text-emerald-700">
                   Vaccin
                 </TabsTrigger>
-                <TabsTrigger value="paaminnelser" className="text-[11px]">
+                <TabsTrigger
+                  value="paaminnelser"
+                  className="text-[11px] data-[state=active]:text-emerald-700"
+                >
                   Påminn.
                 </TabsTrigger>
-                <TabsTrigger value="boka" className="text-[11px]">
+                <TabsTrigger
+                  value="boka"
+                  className="text-[11px] data-[state=active]:text-emerald-700"
+                >
                   Boka
                 </TabsTrigger>
-                <TabsTrigger value="dela_ice" className="text-[11px]">
+                <TabsTrigger
+                  value="dela_ice"
+                  className="text-[11px] data-[state=active]:text-emerald-700"
+                >
                   Dela & ICE
                 </TabsTrigger>
               </TabsList>
@@ -965,12 +961,12 @@ export default function VaccinationsbankenApp() {
             </Tabs>
           </section>
 
-          {/* Liten fotnot */}
+          {/* Fotnot */}
           <section className="mt-1">
             <p className="text-[10px] text-slate-400 flex items-center gap-1">
               <Trash2 className="w-3 h-3" />
-              I skarp version kan du när som helst ta bort ditt konto och alla
-              uppgifter permanent efter att du exporterat din data.
+              I skarp version kan du när som helst exportera och radera ditt
+              konto permanent.
             </p>
           </section>
         </main>
