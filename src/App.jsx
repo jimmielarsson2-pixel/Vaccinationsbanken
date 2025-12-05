@@ -30,6 +30,25 @@ import {
   TabsContent,
 } from "./components/ui/tabs.jsx";
 
+/* ------------ PROTOTYP-BANNER ----------------- */
+
+function PrototypeBanner({ onClose }) {
+  return (
+    <div className="w-full bg-red-600 text-white text-[11px] px-4 py-2 flex items-center justify-between">
+      <span>
+        ⚠️ Detta är en PROTOTYP. Skriv inte in riktiga personuppgifter eller känslig data.
+        Ingen information sparas i skarp miljö i denna version.
+      </span>
+      <button
+        onClick={onClose}
+        className="ml-4 text-white text-xs bg-red-700 hover:bg-red-800 px-2 py-1 rounded"
+      >
+        Stäng
+      </button>
+    </div>
+  );
+}
+
 /* ------------ MOCKDATA ----------------- */
 
 const profiles = [
@@ -813,6 +832,7 @@ export default function VaccinationsbankenApp() {
   const [selectedId, setSelectedId] = useState(
     mockVaccines[0] ? mockVaccines[0].id : null
   );
+  const [showPrototypeBanner, setShowPrototypeBanner] = useState(true);
 
   const activeProfile =
     profiles.find((p) => p.id === activeProfileId) ?? profiles[0];
@@ -829,8 +849,11 @@ export default function VaccinationsbankenApp() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F5F6F8] py-6">
-      <div className="w-full max-w-md rounded-3xl border border-slate-200 shadow-[0_14px_40px_rgba(15,23,42,0.12)] bg-white overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center bg-[#F5F6F8] py-0">
+      {showPrototypeBanner && (
+        <PrototypeBanner onClose={() => setShowPrototypeBanner(false)} />
+      )}
+      <div className="w-full max-w-md mt-4 rounded-3xl border border-slate-200 shadow-[0_14px_40px_rgba(15,23,42,0.12)] bg-white overflow-hidden">
         <Header
           onLogout={() => setLoggedIn(false)}
           activeProfile={activeProfile}
