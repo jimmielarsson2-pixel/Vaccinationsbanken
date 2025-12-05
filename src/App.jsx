@@ -342,8 +342,8 @@ function AddVaccinationForm() {
         </div>
         <p className="text-[11px] text-slate-500">
           För verifierad vaccination kan vårdgivare logga in i sin portal och
-          signera dosen digitalt. Foto-uppladdning används som stöd för
-          tolkning – du godkänner alltid innan något sparas.
+          signera dosen digitalt. Foto-uppladdning används som stöd – du
+          godkänner alltid innan något sparas.
         </p>
       </CardContent>
     </Card>
@@ -553,11 +553,12 @@ function BookingPanel() {
   );
 }
 
-// ------ DELA & ICE & INTEGRITET ------
+// ------ DELA, ICE, KONTO & INTEGRITET ------
 
 function ShareAndICEPanel({ activeProfile }) {
   return (
     <div className="space-y-3 mt-2">
+      {/* Dela vaccinationer */}
       <Card className="border-slate-100 bg-white">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2">
@@ -609,6 +610,7 @@ function ShareAndICEPanel({ activeProfile }) {
         </CardContent>
       </Card>
 
+      {/* ICE / Nödlägeskort */}
       <Card className="border-slate-100 bg-emerald-50/70">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2 text-emerald-900">
@@ -629,7 +631,7 @@ function ShareAndICEPanel({ activeProfile }) {
             </p>
             <p className="text-[11px] text-slate-600">
               Detta är en demo – i skarp version kan du lägga till
-              allergier, mediciner och kontaktpersoner.
+              allergier, mediciner och ICE-kontakter.
             </p>
           </div>
           <Button className="w-full h-9 text-xs bg-emerald-700 hover:bg-emerald-600 flex items-center gap-1">
@@ -639,6 +641,7 @@ function ShareAndICEPanel({ activeProfile }) {
         </CardContent>
       </Card>
 
+      {/* Integritet & data */}
       <Card className="border-slate-100 bg-white">
         <CardHeader className="pb-2 flex flex-row items-center gap-2">
           <Info className="w-4 h-4 text-slate-500" />
@@ -656,6 +659,67 @@ function ShareAndICEPanel({ activeProfile }) {
           <p>
             • Varje verifierad vaccination loggas med vårdgivare, tidpunkt och
             behörig användare.
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Konto & export – den modell vi pratade om */}
+      <Card className="border-slate-100 bg-slate-50">
+        <CardHeader className="pb-2 flex flex-row items-center gap-2">
+          <Trash2 className="w-4 h-4 text-slate-700" />
+          <CardTitle className="text-sm">Konto & export (modell)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-[11px] text-slate-700">
+          <p>
+            Här är en modell för hur avslut av konto och export kan fungera i
+            skarp version. Tanken är att användaren alltid först får med sig
+            all data på ett enkelt sätt, innan kontot tas bort:
+          </p>
+          <ol className="list-decimal list-inside space-y-1">
+            <li>Skapa export (ZIP med JSON/CSV + PDF per profil).</li>
+            <li>Visa nedladdningslänk direkt i appen.</li>
+            <li>Skicka exporten via e-post som backup.</li>
+            <li>Låta användaren välja: pausa/arkivera eller radera kontot.</li>
+          </ol>
+
+          <div className="mt-2 space-y-2">
+            <Button className="w-full h-9 text-xs bg-teal-700 hover:bg-teal-600 flex items-center gap-1">
+              <FileDown className="w-3 h-3" />
+              1. Exportera alla vaccinationer (demo)
+            </Button>
+            <p className="text-[11px] text-slate-600">
+              Skapar en samlad export med ZIP + PDF. I skarp version kan detta
+              också inkludera Wallet-kort och skickas via e-post.
+            </p>
+
+            <Button
+              variant="outline"
+              className="w-full h-9 text-xs flex items-center gap-1 border-slate-300"
+            >
+              <User className="w-3 h-3" />
+              2. Arkivera konto (kan återaktiveras) – demo
+            </Button>
+            <p className="text-[11px] text-slate-600">
+              Kontot stängs men data finns kvar krypterad. Användaren kan
+              återaktivera med BankID och få tillbaka allt.
+            </p>
+
+            <Button
+              variant="ghost"
+              className="w-full h-9 text-xs flex items-center gap-1 text-red-700 hover:bg-red-50"
+            >
+              <Trash2 className="w-3 h-3" />
+              3. Radera konto permanent – demo
+            </Button>
+            <p className="text-[11px] text-slate-600">
+              I skarp version visas här en sista bekräftelse och information om
+              att radering är oåterkallelig, men att export redan skapats.
+            </p>
+          </div>
+
+          <p className="text-[10px] text-slate-500 mt-1">
+            Denna sektion är en prototyp för att visa flödet. Tekniken bakom
+            (GDPR-export, radering, loggning) implementeras i backend.
           </p>
         </CardContent>
       </Card>
@@ -801,7 +865,9 @@ export default function VaccinationsbankenApp() {
                   active={p.id === activeProfileId}
                   onClick={() => {
                     setActiveProfileId(p.id);
-                    const first = mockVaccines.find((v) => v.profileId === p.id);
+                    const first = mockVaccines.find(
+                      (v) => v.profileId === p.id
+                    );
                     setSelectedId(first ? first.id : null);
                   }}
                 />
@@ -904,7 +970,7 @@ export default function VaccinationsbankenApp() {
             <p className="text-[10px] text-slate-400 flex items-center gap-1">
               <Trash2 className="w-3 h-3" />
               I skarp version kan du när som helst ta bort ditt konto och alla
-              uppgifter permanent.
+              uppgifter permanent efter att du exporterat din data.
             </p>
           </section>
         </main>
